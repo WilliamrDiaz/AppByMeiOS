@@ -52,7 +52,7 @@ class DependencyContainer {
         self.userLocalDataSource = UserLocalDataSource(modelContext: modelContext)
         
         // 3. Inicializar Repositorios (Capa de Datos)
-        self.userRepository = UserRepositoryImpl()
+        self.userRepository = UserRepositoryImpl(localDataSource: userLocalDataSource)
         self.chatRepository = ChatRepositoryImpl()
         self.reviewRepository = ReviewRepositoryImpl()
         self.appointmentRepository = AppointmentRepositoryImpl()

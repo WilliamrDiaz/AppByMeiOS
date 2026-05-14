@@ -31,7 +31,7 @@ struct LoginView: View {
                         .font(.system(size: 40, weight: .bold))
                         .foregroundColor(.blue)
                     
-                    Text("Servicios a tu alrededor")
+                    Text("Servicios a tu alrededor.")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
