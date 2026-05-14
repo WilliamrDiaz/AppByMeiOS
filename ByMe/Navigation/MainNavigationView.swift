@@ -1,0 +1,112 @@
+//
+//  MainNavigationView.swift
+//  ByMe
+//
+//  Created by william diaz on 14/05/26.
+//
+
+import SwiftUI
+
+/*struct MainNavigationView: View {
+    // Esta es nuestra "pila" de navegación (el Backstack)
+    @State private var path = [AppRoute.splash]
+    
+    var body: some View {
+        NavigationStack(path: $path) {
+            // No ponemos nada aquí, todo se maneja en navigationDestination
+            Color.clear
+                .navigationDestination(for: AppRoute.self) { route in
+                    switch route {
+                    case .splash:
+                        SplashView(onNavigateToHome: {
+                            // popUpTo SPLASH inclusive = path.removeAll y añadir home
+                            path = [.home]
+                        })
+                        .navigationBarHidden(true)
+
+                    case .login:
+                        LoginView(
+                            onNavigateToHome: { path = [.home] },
+                            onNavigateToRegister: { path.append(.register) }
+                        )
+
+                    case .register:
+                        RegisterView(
+                            onNavigateToHome: { path = [.home] },
+                            onNavigateToLogin: { path = [.login] }
+                        )
+
+                    case .home:
+                        HomeView(
+                            onNavigateToLogin: { path.append(.login) },
+                            onNavigateToProfessionalDetail: { id in
+                                path.append(.professionalDetail(id: id))
+                            },
+                            onNavigateToProfile: { path.append(.userProfile) },
+                            onNavigateToMessages: { path.append(.chatList) },
+                            onNavigateToCalendar: { path.append(.calendar) }
+                        )
+
+                    case .professionalDetail(let id):
+                        ProfessionalDetailView(
+                            professionalId: id,
+                            onNavigateBack: { path.removeLast() },
+                            onNavigateToLogin: { path.append(.login) },
+                            onNavigateToChat: { chatId, name in
+                                path.append(.chatDetail(id: chatId, name: name))
+                            },
+                            onNavigateToHome: { path = [.home] }
+                        )
+
+                    case .chatList:
+                        ChatListView(
+                            onNavigateToChat: { chatId, name in
+                                path.append(.chatDetail(id: chatId, name: name))
+                            }
+                        )
+
+                    case .chatDetail(let id, let name):
+                        ChatDetailView(chatId: id, professionalName: name)
+
+                    case .userProfile:
+                        // Aquí implementamos la lógica de "isProfessional" que tienes en NavGraph
+                        UserProfileRouterView(path: $path)
+
+                    case .offerService:
+                        OfferServiceView(onSaveSuccess: {
+                            path = [.home]
+                        })
+
+                    case .about:
+                        AboutView()
+                        
+                    default:
+                        Text("Pantalla en construcción")
+                    }
+                }
+        }
+    }
+}
+
+// Vista auxiliar para manejar la lógica de perfil (Profesional vs Usuario)
+struct UserProfileRouterView: View {
+    @Binding var path: [AppRoute]
+    // Aquí inyectarías tu ViewModel de tipo de usuario
+    @State private var isProfessional: Bool? = false // Ejemplo
+    
+    var body: some View {
+        if isProfessional == nil {
+            ProgressView()
+        } else if isProfessional == true {
+            ProfessionalProfileView(
+                onNavigateToAbout: { path.append(.about) },
+                onNavigateToHome: { path = [.home] }
+            )
+        } else {
+            ProfileView(
+                onNavigateToProfessionalProfile: { path.append(.offerService) },
+                onNavigateToAbout: { path.append(.about) }
+            )
+        }
+    }
+}*/
