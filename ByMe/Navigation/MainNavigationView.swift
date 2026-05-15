@@ -80,11 +80,10 @@ struct MainNavigationView: View {
                     case .userProfile:
                         UserProfileRouterView(path: $path)
 
-                    /*case .offerService:
-                        OfferServiceView(onSaveSuccess: {
-                            path = [.home]
-                        })
-                     */
+                    case .offerService:
+                        OfferServiceView(
+                            onSaveSuccess: { path = [.home] }
+                        )
 
                     case .about:
                         AboutView()

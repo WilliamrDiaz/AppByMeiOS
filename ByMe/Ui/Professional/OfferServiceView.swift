@@ -10,8 +10,7 @@ import SwiftUI
 struct OfferServiceView: View {
     @StateObject private var viewModel = OfferServiceViewModel()
     @Environment(\.dismiss) var dismiss
-    
-    var onNavigateBack: () -> Void
+
     var onSaveSuccess: () -> Void
     
     @State private var showAddServiceDialog = false
@@ -22,102 +21,93 @@ struct OfferServiceView: View {
     let experienceOptions = ["1 a 4 años", "4 a 8 años", "8 o más años"]
 
     var body: some View {
-        NavigationStack {
-            ZStack {
-                if viewModel.uiState.isLoading {
-                    ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity)
-                } else {
-                    ScrollView {
-                        VStack(alignment: .leading, spacing: 20) {
-                            
-                            // 1. Categoría
-                            sectionLabel("¿En qué categoría eres experto?")
-                            Menu {
-                                ForEach(viewModel.uiState.categories) { cat in
-                                    Button(cat.name) { viewModel.onCategorySelected(cat.name) }
-                                }
-                            } label: {
-                                dropdownField(value: viewModel.uiState.selectedCategory, placeholder: "Selecciona una categoría")
+        ZStack {
+            if viewModel.uiState.isLoading {
+                ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 20) {
+                        
+                        // 1. Categoría
+                        sectionLabel("¿En qué categoría eres experto?")
+                        Menu {
+                            ForEach(viewModel.uiState.categories) { cat in
+                                Button(cat.name) { viewModel.onCategorySelected(cat.name) }
                             }
+                        } label: {
+                            dropdownField(value: viewModel.uiState.selectedCategory, placeholder: "Selecciona una categoría")
+                        }
 
-                            //  2. Experiencia 
-                            sectionLabel("¿Cuánta experiencia tienes?")
-                            Menu {
-                                ForEach(experienceOptions, id: \.self) { opt in
-                                    Button(opt) { viewModel.onExperienceSelected(opt) }
-                                }
-                            } label: {
-                                dropdownField(value: viewModel.uiState.selectedExperience, placeholder: "Selecciona tu experiencia")
+                        //  2. Experiencia
+                        sectionLabel("¿Cuánta experiencia tienes?")
+                        Menu {
+                            ForEach(experienceOptions, id: \.self) { opt in
+                                Button(opt) { viewModel.onExperienceSelected(opt) }
                             }
+                        } label: {
+                            dropdownField(value: viewModel.uiState.selectedExperience, placeholder: "Selecciona tu experiencia")
+                        }
 
-                            //  3. Descripción 
-                            sectionLabel("Descripción de tu perfil")
-                            TextEditor(text: Binding(get: { viewModel.uiState.description }, set: { viewModel.onDescriptionChange($0) }))
-                                .frame(height: 120)
-                                .padding(8)
-                                .background(RoundedRectangle(cornerRadius: 12).stroke(Color.gray.opacity(0.4)))
+                        //  3. Descripción
+                        sectionLabel("Descripción de tu perfil")
+                        TextEditor(text: Binding(get: { viewModel.uiState.description }, set: { viewModel.onDescriptionChange($0) }))
+                            .frame(height: 120)
+                            .padding(8)
+                            .background(RoundedRectangle(cornerRadius: 12).stroke(Color.gray.opacity(0.4)))
 
-                            //  4. Servicios 
-                            HStack {
-                                sectionLabel("Tus servicios")
-                                Spacer()
-                                Button(action: { showAddServiceDialog = true }) {
-                                    Image(systemName: "plus.circle.fill").font(.title3)
-                                }
-                            }
-                            servicesList
-
-                            //  5. Horarios 
-                            HStack {
-                                sectionLabel("Tus horarios de atención")
-                                Spacer()
-                                Button(action: { showAddScheduleDialog = true }) {
-                                    Image(systemName: "plus.circle.fill").font(.title3)
-                                }
-                            }
-                            schedulesList
-
-                            //  6. Título (Placeholder) 
-                            sectionLabel("Sube tu título profesional")
-                            uploadPlaceholder
-
-                            Spacer(minLength: 32)
-
-                            //  7. Botones 
-                            HStack(spacing: 12) {
-                                Button(action: { viewModel.saveProfile() }) {
-                                    Group {
-                                        if viewModel.uiState.isSaving { ProgressView().tint(.white) }
-                                        else { Text("Guardar").fontWeight(.bold) }
-                                    }
-                                    .frame(maxWidth: .infinity).frame(height: 50)
-                                    .background(Color.blue).foregroundColor(.white).cornerRadius(24)
-                                }.disabled(viewModel.uiState.isSaving)
-
-                                Button("Volver") { onNavigateBack() }
-                                    .frame(maxWidth: .infinity).frame(height: 50)
-                                    .overlay(RoundedRectangle(cornerRadius: 24).stroke(Color.blue))
+                        //  4. Servicios
+                        HStack {
+                            sectionLabel("Tus servicios")
+                            Spacer()
+                            Button(action: { showAddServiceDialog = true }) {
+                                Image(systemName: "plus.circle.fill").font(.title3)
                             }
                         }
-                        .padding(24)
+                        servicesList
+
+                        //  5. Horarios
+                        HStack {
+                            sectionLabel("Tus horarios de atención")
+                            Spacer()
+                            Button(action: { showAddScheduleDialog = true }) {
+                                Image(systemName: "plus.circle.fill").font(.title3)
+                            }
+                        }
+                        schedulesList
+
+                        //  6. Título (Placeholder)
+                        sectionLabel("Sube tu título profesional")
+                        uploadPlaceholder
+
+                        Spacer(minLength: 32)
+
+                        //  7. Botones
+                        HStack(spacing: 12) {
+                            Button(action: { viewModel.saveProfile() }) {
+                                Group {
+                                    if viewModel.uiState.isSaving { ProgressView().tint(.white) }
+                                    else { Text("Guardar").fontWeight(.bold) }
+                                }
+                                .frame(maxWidth: .infinity).frame(height: 50)
+                                .background(Color.blue).foregroundColor(.white).cornerRadius(24)
+                            }.disabled(viewModel.uiState.isSaving)
+                        }
                     }
+                    .padding(24)
                 }
             }
-            .navigationTitle("Ofrecer Servicio")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: onNavigateBack) { Image(systemName: "arrow.left").foregroundColor(.primary) }
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {}) { Image(systemName: "ellipsis").rotationEffect(.degrees(90)).foregroundColor(.primary) }
-                }
+        }
+        .navigationTitle("Ofrecer Servicio")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: {}) { Image(systemName: "ellipsis").rotationEffect(.degrees(90)).foregroundColor(.primary) }
             }
-            .sheet(isPresented: $showAddServiceDialog) { addServiceSheet }
-            .sheet(isPresented: $showAddScheduleDialog) { addScheduleSheet }
-            .onChange(of: viewModel.uiState.isSuccess) { oldValue, newValue in
-                if newValue { onSaveSuccess() }
-            }
+        }
+        .sheet(isPresented: $showAddServiceDialog) { addServiceSheet }
+        .sheet(isPresented: $showAddScheduleDialog) { addScheduleSheet }
+        .onChange(of: viewModel.uiState.isSuccess) { oldValue, newValue in
+            if newValue { onSaveSuccess() }
         }
     }
 
