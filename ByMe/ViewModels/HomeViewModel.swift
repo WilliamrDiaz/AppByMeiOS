@@ -30,8 +30,8 @@ class HomeViewModel: ObservableObject {
         Task {
             do {
                 // execute() es el equivalente al invoke() de Kotlin
-                let professionals = try await getProfessionalsUseCase.execute()
-                uiState.professionals = professionals
+                let professionals = try await getProfessionalsUseCase?.execute()
+                uiState.professionals = professionals ?? []
                 uiState.isLoading = false
             } catch {
                 uiState.isLoading = false
@@ -51,8 +51,8 @@ class HomeViewModel: ObservableObject {
                 uiState.errorMessage = nil
                 
                 do {
-                    let professionals = try await searchProfessionalsUseCase.execute(query: query)
-                    uiState.professionals = professionals
+                    let professionals = try await searchProfessionalsUseCase?.execute(query: query)
+                    uiState.professionals = professionals ?? []
                     uiState.isLoading = false
                 } catch {
                     uiState.isLoading = false

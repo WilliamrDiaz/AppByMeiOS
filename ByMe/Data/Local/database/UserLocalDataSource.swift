@@ -17,7 +17,15 @@ class UserLocalDataSource {
     }
 
     func insertUser(_ user: UserEntity) {
-        modelContext.insert(user)
+        print("Guardando usuario: ", user.id)
+        
+        do {
+            modelContext.insert(user)
+           
+            try modelContext.save()
+        } catch {
+            print("Error guardando usuario: \(error)")
+        }
     }
 
     func getUserById(_ id: String) -> UserEntity? {

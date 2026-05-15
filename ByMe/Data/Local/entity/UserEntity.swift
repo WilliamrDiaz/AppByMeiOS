@@ -28,7 +28,7 @@ final class UserEntity {
     var latitude: Double
     var longitude: Double
 
-    init(id: String = "", name: String = "", lastname: String = "", email: String = "",
+    init(id: String, name: String = "", lastname: String = "", email: String = "",
          phone: String = "", photoUrl: String = "", isProfessional: Bool = false,
          role: String = "user", createdAt: Int64 = 0, category: String = "",
          aboutMe: String = "", experience: String = "", rating: Double = 0.0,

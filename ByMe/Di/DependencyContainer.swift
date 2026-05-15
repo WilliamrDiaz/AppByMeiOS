@@ -16,59 +16,70 @@ class DependencyContainer {
     static let shared = DependencyContainer()
     
     // Data Sources
-    private let modelContext: ModelContext
-    let userLocalDataSource: UserLocalDataSource
+    private var modelContext: ModelContext?
+    private(set) var userLocalDataSource: UserLocalDataSource?
     
     // Repositories
-    let userRepository: UserRepositoryProtocol
-    let chatRepository: ChatRepositoryProtocol
-    let reviewRepository: ReviewRepositoryProtocol
-    let appointmentRepository: AppointmentRepositoryProtocol
-    let serviceRepository: ServiceRepositoryProtocol
-    let scheduleRepository: ScheduleRepositoryProtocol
-    let categoryRepository: CategoryRepositoryProtocol
+    private(set) var userRepository: UserRepositoryProtocol?
+    private(set) var chatRepository: ChatRepositoryProtocol?
+    private(set) var reviewRepository: ReviewRepositoryProtocol?
+    private(set) var appointmentRepository: AppointmentRepositoryProtocol?
+    private(set) var serviceRepository: ServiceRepositoryProtocol?
+    private(set) var scheduleRepository: ScheduleRepositoryProtocol?
+    private(set) var categoryRepository: CategoryRepositoryProtocol?
     
     // Use Cases
-    let loginUseCase: LoginUseCase
-    let registerUseCase: RegisterUseCase
-    let getUserUseCase: GetUserUseCase
-    let updateUserUseCase: UpdateUserUseCase
-    let getProfessionalsUseCase: GetProfessionalsUseCase
-    let searchProfessionalsUseCase: SearchProfessionalsUseCase
-    let getChatsUseCase: GetChatsUseCase
-    let getMessagesUseCase: GetMessagesUseCase
-    let sendMessageUseCase: SendMessageUseCase
+    private(set) var loginUseCase: LoginUseCase?
+    private(set) var registerUseCase: RegisterUseCase?
+    private(set) var getUserUseCase: GetUserUseCase?
+    private(set) var updateUserUseCase: UpdateUserUseCase?
+    private(set) var getProfessionalsUseCase: GetProfessionalsUseCase?
+    private(set) var searchProfessionalsUseCase: SearchProfessionalsUseCase?
+    private(set) var getChatsUseCase: GetChatsUseCase?
+    private(set) var getMessagesUseCase: GetMessagesUseCase?
+    private(set) var sendMessageUseCase: SendMessageUseCase?
 
-    private init() {
-        // 1. Inicializar SwiftData (Base de datos local)
-        do {
-            let container = try ModelContainer(for: UserEntity.self)
-            self.modelContext = container.mainContext
-        } catch {
-            fatalError("No se pudo inicializar SwiftData: \(error)")
-        }
-        
-        // 2. Inicializar Data Source Local
-        self.userLocalDataSource = UserLocalDataSource(modelContext: modelContext)
-        
-        // 3. Inicializar Repositorios (Capa de Datos)
-        self.userRepository = UserRepositoryImpl(localDataSource: userLocalDataSource)
-        self.chatRepository = ChatRepositoryImpl()
-        self.reviewRepository = ReviewRepositoryImpl()
-        self.appointmentRepository = AppointmentRepositoryImpl()
-        self.serviceRepository = ServiceRepositoryImpl()
-        self.scheduleRepository = ScheduleRepositoryImpl()
-        self.categoryRepository = CategoryRepositoryImpl()
-        
-        // 4. Inicializar Casos de Uso (Capa de Dominio)
+    private init() {} // init vacío, sin crear nada
+
+    // Llamar desde el App con el ModelContext oficial de SwiftUI
+    static func configure(modelContext: ModelContext) {
+        guard shared.modelContext == nil else { return } // Evitar reinicializar
+        shared.setup(modelContext: modelContext)
+    }
+
+    private func setup(modelContext: ModelContext) {
+        self.modelContext = modelContext
+
+        // 1. Data Source Local
+        let userLocalDS = UserLocalDataSource(modelContext: modelContext)
+        self.userLocalDataSource = userLocalDS
+
+        // 2. Repositorios
+        let userRepo = UserRepositoryImpl(localDataSource: userLocalDS)
+        let chatRepo = ChatRepositoryImpl()
+        let reviewRepo = ReviewRepositoryImpl()
+        let appointmentRepo = AppointmentRepositoryImpl()
+        let serviceRepo = ServiceRepositoryImpl()
+        let scheduleRepo = ScheduleRepositoryImpl()
+        let categoryRepo = CategoryRepositoryImpl()
+
+        self.userRepository = userRepo
+        self.chatRepository = chatRepo
+        self.reviewRepository = reviewRepo
+        self.appointmentRepository = appointmentRepo
+        self.serviceRepository = serviceRepo
+        self.scheduleRepository = scheduleRepo
+        self.categoryRepository = categoryRepo
+
+        // 3. Casos de Uso
         self.loginUseCase = LoginUseCase()
-        self.registerUseCase = RegisterUseCase(userRepository: userRepository)
-        self.getUserUseCase = GetUserUseCase(userRepository: userRepository)
-        self.updateUserUseCase = UpdateUserUseCase(userRepository: userRepository)
-        self.getProfessionalsUseCase = GetProfessionalsUseCase(repository: userRepository)
-        self.searchProfessionalsUseCase = SearchProfessionalsUseCase(userRepository: userRepository)
-        self.getChatsUseCase = GetChatsUseCase(repository: chatRepository)
-        self.getMessagesUseCase = GetMessagesUseCase(repository: chatRepository)
-        self.sendMessageUseCase = SendMessageUseCase(repository: chatRepository)
+        self.registerUseCase = RegisterUseCase(userRepository: userRepo)
+        self.getUserUseCase = GetUserUseCase(userRepository: userRepo)
+        self.updateUserUseCase = UpdateUserUseCase(userRepository: userRepo)
+        self.getProfessionalsUseCase = GetProfessionalsUseCase(repository: userRepo)
+        self.searchProfessionalsUseCase = SearchProfessionalsUseCase(userRepository: userRepo)
+        self.getChatsUseCase = GetChatsUseCase(repository: chatRepo)
+        self.getMessagesUseCase = GetMessagesUseCase(repository: chatRepo)
+        self.sendMessageUseCase = SendMessageUseCase(repository: chatRepo)
     }
 }

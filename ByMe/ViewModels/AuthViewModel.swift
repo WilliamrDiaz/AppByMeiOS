@@ -34,7 +34,7 @@ class AuthViewModel: ObservableObject {
         Task {
             do {
                 // El .execute() reemplaza al .invoke() de Kotlin
-                try await loginUseCase.execute(email: email, password: password)
+                try await loginUseCase?.execute(email: email, password: password)
                 uiState.isLoading = false
                 uiState.isSuccess = true
             } catch {
@@ -51,7 +51,7 @@ class AuthViewModel: ObservableObject {
         
         Task {
             do {
-                try await registerUseCase.execute(
+                try await registerUseCase?.execute(
                     name: name,
                     lastname: lastname,
                     email: email,

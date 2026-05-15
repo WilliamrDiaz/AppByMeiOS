@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-/*struct MainNavigationView: View {
+struct MainNavigationView: View {
     // Esta es nuestra "pila" de navegación (el Backstack)
     @State private var path = [AppRoute.splash]
     
@@ -40,7 +40,7 @@ import SwiftUI
                         HomeView(
                             onNavigateToLogin: { path.append(.login) },
                             onNavigateToProfessionalDetail: { id in
-                                path.append(.professionalDetail(id: id))
+                                path.append(.professionalDetail(professionalId: id))
                             },
                             onNavigateToProfile: { path.append(.userProfile) },
                             onNavigateToMessages: { path.append(.chatList) },
@@ -52,13 +52,15 @@ import SwiftUI
                             professionalId: id,
                             onNavigateBack: { path.removeLast() },
                             onNavigateToLogin: { path.append(.login) },
-                            onNavigateToChat: { chatId, name in
-                                path.append(.chatDetail(id: chatId, name: name))
+                            onNavigateToChat: {_,_ in 
+                                /*chatId, name in
+                                path.append(contentsOf: .chatDetail(id: chatId, name: name))*/
+                                print("Aqui va el chat")
                             },
                             onNavigateToHome: { path = [.home] }
                         )
 
-                    case .chatList:
+                    /*case .chatList:
                         ChatListView(
                             onNavigateToChat: { chatId, name in
                                 path.append(.chatDetail(id: chatId, name: name))
@@ -79,7 +81,7 @@ import SwiftUI
 
                     case .about:
                         AboutView()
-                        
+                        */
                     default:
                         Text("Pantalla en construcción")
                     }
@@ -89,7 +91,7 @@ import SwiftUI
 }
 
 // Vista auxiliar para manejar la lógica de perfil (Profesional vs Usuario)
-struct UserProfileRouterView: View {
+/*struct UserProfileRouterView: View {
     @Binding var path: [AppRoute]
     // Aquí inyectarías tu ViewModel de tipo de usuario
     @State private var isProfessional: Bool? = false // Ejemplo
@@ -109,4 +111,5 @@ struct UserProfileRouterView: View {
             )
         }
     }
-}*/
+}
+*/

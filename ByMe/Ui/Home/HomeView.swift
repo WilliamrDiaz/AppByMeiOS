@@ -19,7 +19,7 @@ struct HomeView: View {
     var onNavigateToMessages: () -> Void
     var onNavigateToCalendar: () -> Void
 
-    // Configuración de la cuadrícula (2 columnas como en Android)
+    // Configuración de la cuadrícula
     private let columns = [
         GridItem(.flexible(), spacing: 12),
         GridItem(.flexible(), spacing: 12)
@@ -30,23 +30,23 @@ struct HomeView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     
-                    // --- 1. Barra de búsqueda ---
+                    // 1. Barra de búsqueda
                     SearchBar(text: Binding(
                         get: { viewModel.uiState.searchQuery },
                         set: { viewModel.onSearchQueryChange(query: $0) }
                     ))
                     .padding(.top, 16)
 
-                    // --- 2. Card de Mapa (Placeholder) ---
+                    // 2. Card de Mapa
                     MapPlaceholder()
 
-                    // --- 3. Título de Sección ---
+                    // 3. Título de Sección
                     Text("Profesionales")
                         .font(.headline)
                         .fontWeight(.bold)
                         .padding(.top, 8)
 
-                    // --- 4. Contenido Principal (Loading / Empty / Grid) ---
+                    // 4. Contenido Principal
                     if viewModel.uiState.isLoading {
                         HStack {
                             Spacer()
@@ -73,7 +73,7 @@ struct HomeView: View {
                 .padding(.horizontal, 16)
             }
 
-            // --- 5. Barra de navegación inferior ---
+            // 5. Barra de navegación inferior
             HomeBottomBar(
                 onHome: { },
                 onMessages: {
@@ -91,7 +91,7 @@ struct HomeView: View {
     }
 }
 
-// --- Sub-componente: ProfessionalCard ---
+// Sub-componente: ProfessionalCard
 struct ProfessionalCard: View {
     let professional: User
     let onClick: () -> Void
@@ -154,7 +154,7 @@ struct ProfessionalCard: View {
     }
 }
 
-// --- Sub-componente: SearchBar ---
+// Sub-componente: SearchBar
 struct SearchBar: View {
     @Binding var text: String
     
@@ -170,7 +170,7 @@ struct SearchBar: View {
     }
 }
 
-// --- Sub-componente: MapPlaceholder ---
+// Sub-componente: MapPlaceholder 
 struct MapPlaceholder: View {
     var body: some View {
         VStack(spacing: 8) {
@@ -190,7 +190,7 @@ struct MapPlaceholder: View {
     }
 }
 
-// --- Sub-componente: BottomBar ---
+// Sub-componente: BottomBar
 struct HomeBottomBar: View {
     var onHome: () -> Void
     var onMessages: () -> Void
