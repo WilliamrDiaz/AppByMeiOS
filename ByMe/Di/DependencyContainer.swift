@@ -15,6 +15,8 @@ class DependencyContainer {
     // Singleton para acceder desde toda la app
     static let shared = DependencyContainer()
     
+    private(set) var draftManager: DraftManager = DraftManager()
+    
     // Data Sources
     private var modelContext: ModelContext?
     private(set) var userLocalDataSource: UserLocalDataSource?

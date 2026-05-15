@@ -13,5 +13,5 @@ struct Message: Codable, Identifiable {
     var senderId: String = ""
     var text: String = ""
     var timestamp: Int64 = Int64(Date().timeIntervalSince1970 * 1000)
-    var isRead: Bool = false
+    var read: Bool = false
 }

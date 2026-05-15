@@ -52,26 +52,29 @@ struct MainNavigationView: View {
                             professionalId: id,
                             onNavigateBack: { path.removeLast() },
                             onNavigateToLogin: { path.append(.login) },
-                            onNavigateToChat: {_,_ in 
-                                /*chatId, name in
-                                path.append(contentsOf: .chatDetail(id: chatId, name: name))*/
+                            onNavigateToChat: {chatId, name in
+                                path.append(.chatDetail(chatId: chatId, professionalName: name))
                                 print("Aqui va el chat")
                             },
                             onNavigateToHome: { path = [.home] }
                         )
 
-                    /*case .chatList:
+                    case .chatList:
                         ChatListView(
                             onNavigateToChat: { chatId, name in
-                                path.append(.chatDetail(id: chatId, name: name))
-                            }
+                                path.append(.chatDetail(chatId: chatId, professionalName: name))
+                            },
+                            onNavigateToLogin: { path.append(.login) },
+                            onNavigateToProfile: { path.append(.userProfile) },
+                            onNavigateToCalendar: { path.append(.calendar) },
+                            onNavigateToHome: { path = [.home] }
                         )
 
-                    case .chatDetail(let id, let name):
-                        ChatDetailView(chatId: id, professionalName: name)*/
+                        case .chatDetail(let id, let name):
+                            ChatDetailView(chatId: id, professionalName: name, onNavigateBack: { path.removeLast() }
+                            )
 
                     case .userProfile:
-                        // Aquí implementamos la lógica de "isProfessional" que tienes en NavGraph
                         UserProfileRouterView(path: $path)
 
                     /*case .offerService:
@@ -105,8 +108,8 @@ struct UserProfileRouterView: View {
                 onNavigateToLogin: { path.append(.login) },
                 onNavigateToAbout: { path.append(.about) },
                 onNavigateToHome: { path = [.home]},
-                onNavigateToMessages: { print ("Mensajes") },
-                onNavigateToCalendar: { print("Calendario") }
+                onNavigateToMessages: { path.append(.chatList) },
+                onNavigateToCalendar: { path.append(.calendar) }
             )
             
         } else {
