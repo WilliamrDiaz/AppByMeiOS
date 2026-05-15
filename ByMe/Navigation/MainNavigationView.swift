@@ -68,20 +68,21 @@ struct MainNavigationView: View {
                         )
 
                     case .chatDetail(let id, let name):
-                        ChatDetailView(chatId: id, professionalName: name)
+                        ChatDetailView(chatId: id, professionalName: name)*/
 
                     case .userProfile:
                         // Aquí implementamos la lógica de "isProfessional" que tienes en NavGraph
                         UserProfileRouterView(path: $path)
 
-                    case .offerService:
+                    /*case .offerService:
                         OfferServiceView(onSaveSuccess: {
                             path = [.home]
                         })
+                     */
 
                     case .about:
                         AboutView()
-                        */
+                        
                     default:
                         Text("Pantalla en construcción")
                     }
@@ -90,26 +91,31 @@ struct MainNavigationView: View {
     }
 }
 
-// Vista auxiliar para manejar la lógica de perfil (Profesional vs Usuario)
-/*struct UserProfileRouterView: View {
+// Vista auxiliar para manejar la lógica de perfil (Profesional - Usuario)
+struct UserProfileRouterView: View {
     @Binding var path: [AppRoute]
-    // Aquí inyectarías tu ViewModel de tipo de usuario
-    @State private var isProfessional: Bool? = false // Ejemplo
+    // Inyectamos el ViewModel
+    @StateObject private var viewModel = UserTypeViewModel()
     
     var body: some View {
-        if isProfessional == nil {
+        if viewModel.isProfessional == nil {
             ProgressView()
-        } else if isProfessional == true {
+        } else if viewModel.isProfessional == true {
             ProfessionalProfileView(
+                onNavigateToLogin: { path.append(.login) },
                 onNavigateToAbout: { path.append(.about) },
-                onNavigateToHome: { path = [.home] }
+                onNavigateToHome: { path = [.home]},
+                onNavigateToMessages: { print ("Mensajes") },
+                onNavigateToCalendar: { print("Calendario") }
             )
+            
         } else {
             ProfileView(
+                onNavigateToLogin: { path.append(.login) },
                 onNavigateToProfessionalProfile: { path.append(.offerService) },
-                onNavigateToAbout: { path.append(.about) }
+                onNavigateToAbout: { path.append(.about) },
+                onNavigateToHome: { path = [.home] }
             )
         }
     }
 }
-*/
