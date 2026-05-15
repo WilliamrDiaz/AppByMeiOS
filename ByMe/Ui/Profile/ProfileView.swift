@@ -15,8 +15,8 @@ struct ProfileView: View {
     var onNavigateToLogin: () -> Void
     var onNavigateToProfessionalProfile: () -> Void
     var onNavigateToAbout: () -> Void
-    var onNavigateToMessages: () -> Void = {}
-    var onNavigateToCalendar: () -> Void = {}
+    var onNavigateToMessages: () -> Void
+    var onNavigateToCalendar: () -> Void
     var onNavigateToHome: () -> Void
     
     var body: some View {
@@ -115,6 +115,7 @@ struct ProfileView: View {
             
             // Barra inferior
             HomeBottomBar(
+                selectedTab: .profile,
                 onHome: { onNavigateToHome() },
                 onMessages: { onNavigateToMessages() },
                 onCalendar: { onNavigateToCalendar() },
@@ -131,7 +132,7 @@ struct ProfileView: View {
                     }
                     Button(role: .destructive, action: {
                         try? Auth.auth().signOut()
-                        onNavigateToLogin()
+                        onNavigateToHome()
                     }) {
                         Label("Cerrar sesión", systemImage: "rectangle.portrait.and.arrow.right")
                     }
@@ -145,7 +146,7 @@ struct ProfileView: View {
         }
     }
     
-    // Componente para los campos del perfil (Igual a ProfileField en Android)
+    // Componente para los campos del perfil
     private func profileField(value: Binding<String>, placeholder: String) -> some View {
         HStack {
             TextField(placeholder, text: value)

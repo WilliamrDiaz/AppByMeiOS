@@ -34,6 +34,7 @@ struct ChatListView: View {
             
             // Barra inferior consistente con el resto de la app
             HomeBottomBar(
+                selectedTab: .messages,
                 onHome: onNavigateToHome,
                 onMessages: { },
                 onCalendar: onNavigateToCalendar,

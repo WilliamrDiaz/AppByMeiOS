@@ -75,6 +75,7 @@ struct HomeView: View {
 
             // 5. Barra de navegación inferior
             HomeBottomBar(
+                selectedTab: .home,
                 onHome: { },
                 onMessages: {
                     if Auth.auth().currentUser != nil { onNavigateToMessages() }
@@ -84,7 +85,11 @@ struct HomeView: View {
                     if Auth.auth().currentUser != nil { onNavigateToCalendar() }
                     else { onNavigateToLogin() }
                 },
-                onProfile: { onNavigateToProfile() }
+                onProfile: {
+                    if Auth.auth().currentUser != nil {
+                        onNavigateToProfile() }
+                    else { onNavigateToLogin() }
+                }
             )
         }
         .navigationBarHidden(true)
@@ -190,8 +195,15 @@ struct MapPlaceholder: View {
     }
 }
 
+//
+enum HomeTab {
+    case home, messages, calendar, profile
+}
+
 // Sub-componente: BottomBar
 struct HomeBottomBar: View {
+    let selectedTab: HomeTab
+    
     var onHome: () -> Void
     var onMessages: () -> Void
     var onCalendar: () -> Void
@@ -201,10 +213,10 @@ struct HomeBottomBar: View {
         VStack(spacing: 0) {
             Divider()
             HStack {
-                BottomBarItem(icon: "house.fill", label: "Inicio", isSelected: true, action: onHome)
-                BottomBarItem(icon: "tray.fill", label: "Mensajes", action: onMessages)
-                BottomBarItem(icon: "calendar", label: "Citas", action: onCalendar)
-                BottomBarItem(icon: "person.fill", label: "Perfil", action: onProfile)
+                BottomBarItem(icon: "house.fill", label: "Inicio", isSelected: selectedTab == .home, action: onHome)
+                BottomBarItem(icon: "tray.fill", label: "Mensajes", isSelected: selectedTab == .messages, action: onMessages)
+                BottomBarItem(icon: "calendar", label: "Citas", isSelected: selectedTab == .calendar, action: onCalendar)
+                BottomBarItem(icon: "person.fill", label: "Perfil", isSelected: selectedTab == .profile, action: onProfile)
             }
             .padding(.top, 10)
             .padding(.bottom, 20)
@@ -216,7 +228,7 @@ struct HomeBottomBar: View {
 struct BottomBarItem: View {
     let icon: String
     let label: String
-    var isSelected: Bool = false
+    var isSelected: Bool
     let action: () -> Void
 
     var body: some View {

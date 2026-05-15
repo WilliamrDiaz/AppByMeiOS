@@ -52,6 +52,7 @@ class ProfessionalProfileViewModel: ObservableObject {
                 uiState.services = try await servicesTask ?? []
                 uiState.schedules = try await schedulesTask ?? []
                 uiState.isLoading = false
+                uiState.hasChanges = false
             } catch {
                 uiState.isLoading = false
                 uiState.errorMessage = error.localizedDescription
@@ -128,6 +129,7 @@ class ProfessionalProfileViewModel: ObservableObject {
                     try await scheduleRepository?.addSchedule(userId: userId, schedule: schedule)
                 }
                 
+                uiState.user = updatedUser
                 uiState.isSaving = false
                 uiState.isSuccess = true
                 uiState.hasChanges = false

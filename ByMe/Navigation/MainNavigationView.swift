@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 struct MainNavigationView: View {
     // Esta es nuestra "pila" de navegación (el Backstack)
@@ -54,8 +55,10 @@ struct MainNavigationView: View {
                             onNavigateToLogin: { path.append(.login) },
                             onNavigateToChat: {chatId, name in
                                 path.append(.chatDetail(chatId: chatId, professionalName: name))
-                                print("Aqui va el chat")
                             },
+                            onNavigateToProfile : { path.append(.userProfile) },
+                            onNavigateToMessages: { path.append(.chatList) },
+                            onNavigateToCalendar: { path.append(.calendar) },
                             onNavigateToHome: { path = [.home] }
                         )
 
@@ -101,8 +104,15 @@ struct UserProfileRouterView: View {
     @StateObject private var viewModel = UserTypeViewModel()
     
     var body: some View {
-        if viewModel.isProfessional == nil {
-            ProgressView()
+        if Auth.auth().currentUser == nil {
+            VStack {
+                ProgressView()
+            }
+            .onAppear {
+                path.append(.login)
+            }
+        } else if viewModel.isProfessional == nil {
+            ProgressView("Verificando perfil...")
         } else if viewModel.isProfessional == true {
             ProfessionalProfileView(
                 onNavigateToLogin: { path.append(.login) },
@@ -117,6 +127,8 @@ struct UserProfileRouterView: View {
                 onNavigateToLogin: { path.append(.login) },
                 onNavigateToProfessionalProfile: { path.append(.offerService) },
                 onNavigateToAbout: { path.append(.about) },
+                onNavigateToMessages: { path.append(.chatList) },
+                onNavigateToCalendar: { path.append(.calendar) },
                 onNavigateToHome: { path = [.home] }
             )
         }

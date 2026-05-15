@@ -75,6 +75,7 @@ struct ProfessionalProfileView: View {
             
             // Barra inferior (Misma que HomeScreen)
             HomeBottomBar(
+                selectedTab: .profile,
                 onHome: { onNavigateToHome() },
                 onMessages: { onNavigateToMessages() },
                 onCalendar: { onNavigateToCalendar() },
@@ -91,7 +92,7 @@ struct ProfessionalProfileView: View {
                     }
                     Button(role: .destructive, action: {
                         try? Auth.auth().signOut()
-                        onNavigateToLogin()
+                        onNavigateToHome()
                     }) {
                         Label("Cerrar sesión", systemImage: "rectangle.portrait.and.arrow.right")
                     }
@@ -110,7 +111,7 @@ struct ProfessionalProfileView: View {
         }
     }
     
-    //  SUB-VISTAS (Fieles a los Componentes de Android) 
+    //  SUB-VISTAS
     
     private var profilePhotoSection: some View {
         ZStack(alignment: .bottomTrailing) {
@@ -165,7 +166,7 @@ struct ProfessionalProfileView: View {
             if viewModel.uiState.services.isEmpty {
                 Text("No hay servicios agregados").font(.caption).foregroundColor(.gray)
             } else {
-                ForEach(viewModel.uiState.services, id: \.name) { service in
+                ForEach(Array(viewModel.uiState.services.enumerated()), id: \.offset) { index, service in
                     HStack {
                         VStack(alignment: .leading) {
                             Text(service.name).bold().font(.system(size: 14))
@@ -189,11 +190,11 @@ struct ProfessionalProfileView: View {
             if viewModel.uiState.schedules.isEmpty {
                 Text("No hay horarios agregados").font(.caption).foregroundColor(.gray)
             } else {
-                ForEach(viewModel.uiState.schedules, id: \.day) { schedule in
+                ForEach(Array(viewModel.uiState.schedules.enumerated()), id: \.offset) { index, schedule in
                     HStack {
                         VStack(alignment: .leading) {
                             Text(schedule.day).bold().font(.system(size: 14))
-                            ForEach(schedule.hours.split(separator: "\n"), id: \.self) { hour in
+                            ForEach(Array(schedule.hours.split(separator: "\n").enumerated()), id: \.offset) { hIndex, hour in
                                 Text("• \(String(hour))").font(.system(size: 13)).foregroundColor(.secondary)
                             }
                         }
@@ -232,9 +233,12 @@ struct ProfessionalProfileView: View {
                     Text("Guardar Cambios")
                 }
             }
-            .frame(maxWidth: .infinity).frame(height: 50)
-            .background(Color.blue).foregroundColor(.white).cornerRadius(24)
-            .disabled(viewModel.uiState.isSaving)
+            .frame(maxWidth: .infinity)
+            .frame(height: 50)
+            .background(viewModel.uiState.hasChanges && !viewModel.uiState.isSaving ? Color.blue : Color.gray.opacity(0.5))
+                        .foregroundColor(.white)
+                        .cornerRadius(24)
+            .disabled(!viewModel.uiState.hasChanges || viewModel.uiState.isSaving)
             
             Button("Volver") { onNavigateToHome() }
                 .frame(maxWidth: .infinity).frame(height: 50)

@@ -103,7 +103,7 @@ struct ChatDetailView: View {
     }
 }
 
-// Burbuja fiel a MessageBubble en Android
+// Burbuja de mensaje personalizada
 struct MessageBubble: View {
     let message: Message
     let isCurrentUser: Bool

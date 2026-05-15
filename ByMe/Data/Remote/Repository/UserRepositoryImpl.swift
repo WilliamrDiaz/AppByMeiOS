@@ -52,8 +52,10 @@ class UserRepositoryImpl: UserRepositoryProtocol {
     }
 
     func updateUser(user: User) async throws {
+        print("actuazando usuario ", user.id ?? "")
+        
         // Actualizar en remoto
-        try db.collection(usersCollection).document(user.id ?? "").setData(from: user, merge: false)
+        try db.collection(usersCollection).document(user.id ?? "").setData(from: user, merge: true)
         
         // Actualizar en local
         localDataSource.insertUser(user.toEntity())

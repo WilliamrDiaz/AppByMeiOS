@@ -16,10 +16,10 @@ struct ProfessionalDetailView: View {    let professionalId: String
     var onNavigateBack: () -> Void
     var onNavigateToLogin: () -> Void
     var onNavigateToChat: (String, String) -> Void
-    var onNavigateToProfile: () -> Void = {}
-    var onNavigateToMessages: () -> Void = {}
-    var onNavigateToCalendar: () -> Void = {}
-    var onNavigateToHome: () -> Void = {}
+    var onNavigateToProfile: () -> Void
+    var onNavigateToMessages: () -> Void
+    var onNavigateToCalendar: () -> Void
+    var onNavigateToHome: () -> Void
 
     var body: some View {
         VStack(spacing: 0) {
@@ -36,10 +36,10 @@ struct ProfessionalDetailView: View {    let professionalId: String
                     selectedTab: viewModel.uiState.selectedTab,
                     onTabSelected: { viewModel.onTabSelected(index: $0) },
                     onContactClick: {
-                        if Auth.auth().currentUser != nil {
-                            _ = viewModel.uiState.professional!
-                            /*let chatId = "\(user.uid)_\(prof.id ?? "")"
-                            onNavigateToChat(chatId, "\(prof.name) \(prof.lastname)")*/
+                        if let currentUser = Auth.auth().currentUser,
+                           let professional = viewModel.uiState.professional {
+                            let chatId = "\(currentUser.uid)_\(professional.id ?? "")"
+                            onNavigateToChat(chatId, "\(professional.name) \(professional.lastname)")
                         } else {
                             onNavigateToLogin()
                         }
@@ -52,6 +52,7 @@ struct ProfessionalDetailView: View {    let professionalId: String
             
             // Barra de navegación inferior
             HomeBottomBar(
+                selectedTab: .home,
                 onHome: { onNavigateToHome() },
                 onMessages: { onNavigateToMessages() },
                 onCalendar: { onNavigateToCalendar() },
@@ -281,10 +282,13 @@ struct TabChip: View {
 #Preview {
     NavigationStack {
         ProfessionalDetailView(
-            professionalId: "123",
-            onNavigateBack: {},
+            professionalId: "123", onNavigateBack: {},
             onNavigateToLogin: {},
-            onNavigateToChat: { _, _ in }
+            onNavigateToChat: { _, _ in },
+            onNavigateToProfile: {},
+            onNavigateToMessages: {},
+            onNavigateToCalendar: {},
+            onNavigateToHome: {}
         )
     }
 }
